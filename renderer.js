@@ -17,7 +17,10 @@ let lastScreenshot;
 const thumbSize = determineScreenShotSize()
 let options = { types: ['screen'], thumbnailSize: thumbSize }
 
+isShooting = false;
+
 function shoot() {
+    isShooting = true;
     desktopCapturer.getSources(options, function (error, sources) {
     if (error) return console.log(error)
 
@@ -35,25 +38,22 @@ function shoot() {
                             lastScreenshot = currentScreenshot;
                         });
                     }
-                    shoot();
+                    isShooting = false;
             });
         } else {
             lastScreenshot = currentScreenshot;
-            shoot();
+            isShooting = false;
         }
-        // fs.writeFile(screenshotPath, , function (error) {
-        //     if (lastScreenshot) {
-
-        //     }
-
-        //   if (error) return console.log(error)
-        // })
       }
     })
 })
 }
-shoot()
-// setInterval(() => shoot(), 1000);
+
+setInterval(() => {
+    if (!isShooting) {
+        shoot();
+    }
+}, 1000);
 
 
 function determineScreenShotSize () {
